@@ -45,9 +45,33 @@ let currentIdNumber = tasks.length;
 // 0 - Bajar repo, todos los ejercicios seran parte
 // del mismo proyecto js-dom-manipulation-essentials
 // Hacer una funcion que cree dinamicamente las task
-function createTaskComponent(task) {}
+function createTaskComponent(task) {
+  const template = `<div> <p> id: ${task.id} </p>
+                    <p> name: ${task.name} </p>
+                    <p> description: ${task.description} </p>
+                    <p> imgUrl: ${task.imgUrl} </p> </div>`
 
-function loadTasks() {}
+  showTask(task);
+  /* crear partecita de html q cargue los datos de la task, despues ponerle una funcion que cargue la task en el ul */
+}
+
+function showTask(template) {
+  let ulHTML = document.getElementsByTagName("ul");
+  let ul = ulHTML[0];
+
+  const li = document.createElement("li");
+  //li.textContent = template;
+  //ul.appendChild(li);
+  ul.insertAdjacentHTML("beforeend", template);
+}
+
+function loadTasks() {
+  /* foreach task llamar al create task componnent*/
+  tasks.forEach(task => {
+    createTaskComponent(task);
+  });
+
+}
 
 // 1 - Funcion
 // Mostrar en un mensaje de alerta los valores del form
@@ -55,8 +79,33 @@ function addTaskAlert(newTask) {}
 
 // 2 - Funcion
 // Agregar elemento en la lista al llenar el formulario
+function addTask() {
+  const addTaskButtons = document.getElementsByClassName("submit-button");
+  const addTaskButton = addTaskButtons[0];
 
-function addTaskHandler(event) {}
+  addTaskButton.addEventListener("click", addTaskHandler);
+}
+
+function addTaskHandler(/*event*/) {
+  const name = document.getElementById("nameInput");
+  const owner = document.getElementById("ownerInput");
+  const description = document.getElementById("descriptionInput");
+  const imgUrl = document.getElementById("imgUrlInput");
+
+  // aca agregar task a la lista de tasks
+  const newTask = {
+    id: currentIdNumber +1,
+    owner: owner.value,
+    name: name.value,
+    description: description.value,
+    imgUrl: imgUrl.value,
+  }
+
+  tasks.push(newTask);
+
+  currentIdNumber += 1;
+  loadTasks();
+}
 
 // 3 - Funcion
 // Eliminar elemento en la lista al hacer click sobre el elemento
@@ -70,3 +119,5 @@ function deleteAllTaskHandler() {}
 // Si ya no quedan tareas navegar programaticamente
 // a www.youtube.com
 function redirectWhenNoTask() {}
+
+loadTasks();
