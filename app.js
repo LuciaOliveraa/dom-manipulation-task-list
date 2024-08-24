@@ -49,10 +49,10 @@ function createTaskComponent(task) {
   const template = `<div> <p> id: ${task.id} </p>
                     <p> name: ${task.name} </p>
                     <p> description: ${task.description} </p>
-                    <p> imgUrl: ${task.imgUrl} </p> </div>`
+                    <img src="${task.imgUrl}" > </div>`
 
-  showTask(task);
-  /* crear partecita de html q cargue los datos de la task, despues ponerle una funcion que cargue la task en el ul */
+  showTask(template);
+  /* crea partecita de html que carga los datos de la task, despues llama a una funcion que carga la task en el ul */
 }
 
 function showTask(template) {
@@ -60,13 +60,10 @@ function showTask(template) {
   let ul = ulHTML[0];
 
   const li = document.createElement("li");
-  //li.textContent = template;
-  //ul.appendChild(li);
   ul.insertAdjacentHTML("beforeend", template);
 }
 
 function loadTasks() {
-  /* foreach task llamar al create task componnent*/
   tasks.forEach(task => {
     createTaskComponent(task);
   });
