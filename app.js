@@ -65,10 +65,14 @@ function showTask(template) {
   ul.appendChild(li);
 
   // Añade manejador de eventos para eliminar la task al hacer click
-  //li.addEventListener("click", removeTask);
+  li.addEventListener("click", deleteTaskHandler);
 }
 
 function loadTasks() {
+  let ulHTML = document.getElementsByTagName("ul");
+  let ul = ulHTML[0];
+  ul.innerHTML = "";
+  
   tasks.forEach(task => {
     createTaskComponent(task);
   });
