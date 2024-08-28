@@ -46,7 +46,7 @@ let currentIdNumber = tasks.length;
 // del mismo proyecto js-dom-manipulation-essentials
 // Hacer una funcion que cree dinamicamente las task
 function createTaskComponent(task) {
-  const template = `<div> <p> id: ${task.id} </p>
+  const template = `<div class="task" id=${task.id}>
                     <p> name: ${task.name} </p>
                     <p> description: ${task.description} </p>
                     <img src="${task.imgUrl}" > </div>`
@@ -60,14 +60,18 @@ function showTask(template) {
   let ul = ulHTML[0];
 
   const li = document.createElement("li");
-  ul.insertAdjacentHTML("beforeend", template);
+  //ul.insertAdjacentHTML("beforeend", template);
+  li.innerHTML = template;
+  ul.appendChild(li);
+
+  // Añade manejador de eventos para eliminar la task al hacer click
+  //li.addEventListener("click", removeTask);
 }
 
 function loadTasks() {
   tasks.forEach(task => {
     createTaskComponent(task);
   });
-
 }
 
 // 1 - Funcion
@@ -75,7 +79,12 @@ function loadTasks() {
 function addTaskAlert(newTask) {}
 
 // 2 - Funcion
-// Agregar elemento en la lista al llenar el formulario
+//Agregar elemento en la lista al llenar el formulario
+document.addEventListener("DOMContentLoaded", () => {
+  addTask();
+  addClearButtonHandler();
+});
+
 function addTask() {
   const addTaskButtons = document.getElementsByClassName("submit-button");
   const addTaskButton = addTaskButtons[0];
@@ -83,13 +92,15 @@ function addTask() {
   addTaskButton.addEventListener("click", addTaskHandler);
 }
 
-function addTaskHandler(/*event*/) {
+function addTaskHandler(event) {
+  event.preventDefault();
+
   const name = document.getElementById("nameInput");
   const owner = document.getElementById("ownerInput");
   const description = document.getElementById("descriptionInput");
   const imgUrl = document.getElementById("imgUrlInput");
 
-  // aca agregar task a la lista de tasks
+  // aca se agrega la task a la lista de tasks
   const newTask = {
     id: currentIdNumber +1,
     owner: owner.value,
@@ -101,20 +112,63 @@ function addTaskHandler(/*event*/) {
   tasks.push(newTask);
 
   currentIdNumber += 1;
+
+  // Limpiar el formulario
+  name.value = "";
+  owner.value = "";
+  description.value = "";
+  imgUrl.value = "";
+  
   loadTasks();
 }
 
 // 3 - Funcion
 // Eliminar elemento en la lista al hacer click sobre el elemento
-function deleteTaskHandler(taskElement) {}
+// document.addEventListener("DOMContentLoaded", () => {
+//   deleteTaskHandler();
+// });
+function deleteTaskHandler(/*taskElement*/event) {
+  //const tasks = document.getElementsByClassName("task");
+  event.preventDefault();
+  const li = event.currentTarget;
+  
+  // Obtener el ID de la tarea a eliminar desde el atributo data-id
+  const taskId = parseInt(li.querySelector('.task-item').dataset.id, 10);
+
+  // Eliminar la tarea de la lista tasks
+  tasks = tasks.filter(task => task.id !== taskId);
+
+  // Eliminar el elemento <li> del DOM
+  li.remove();
+}
 
 // 4 - Funcion
 // Crear un boton para vaciar/eliminar todas las tareas
-function deleteAllTaskHandler() {}
+function deleteAllTaskHandler() {
+  tasks = [];
+
+  const ulHTML = document.getElementsByClassName("ul");
+  const ul = ulHTML[0];
+  ul.innerHTML = "";
+}
+
+function addClearButtonHandler() {
+  const clearButtonHTML = document.getElementsByClassName("clear-button");
+  const clearButton = clearButtonHTML[0];
+
+  clearButton.addEventListener("click", (event) => {
+    event.preventDefault(); // evita que se recargue la página
+    deleteAllTaskHandler();
+  });
+}
 
 // 5 - Funcion
 // Si ya no quedan tareas navegar programaticamente
 // a www.youtube.com
-function redirectWhenNoTask() {}
+function redirectWhenNoTask() {
+  if (tasks.length === 0) {
+    window.location.href = "https://www.youtube.com";
+  }
+}
 
 loadTasks();
